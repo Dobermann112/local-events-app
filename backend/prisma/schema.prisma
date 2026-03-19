@@ -1,13 +1,81 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
+// Prisma Client生成設定
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
+// DB接続設定（.envのDATABASE_URLを使用）
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id             String           @id @default(uuid())
+  name           String
+  ageGroup       AgeGroup
+  createdAt      DateTime         @default(now())
+
+  events         Event[]          @relation("OrganizerEvents")
+  participations Participation[]
+}
+
+model Event {
+  id              String               @id @default(uuid())
+  title           String
+  description     String?
+  startAt         DateTime
+  endAt           DateTime
+  location        String
+  capacity        Int
+  allowSameDay    Boolean
+  organizerId     String
+  areaId          String
+  createdAt       DateTime             @default(now())
+
+  organizer       User                 @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  area            Area                 @relation(fields: [areaId], references: [id])
+  participations  Participation[]
+  targetGroups    EventTargetGroup[]
+
+  @@index([startAt])
+  @@index([areaId])
+}
+
+model Participation {
+  id        String              @id @default(uuid())
+  userId    String
+  eventId   String
+  status    ParticipationStatus
+  joinedAt  DateTime            @default(now())
+
+  user      User                @relation(fields: [userId], references: [id])
+  event     Event               @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model Area {
+  id     String   @id @default(uuid())
+  name   String
+  events Event[]
+}
+
+model EventTargetGroup {
+  id        String     @id @default(uuid())
+  eventId   String
+  group     AgeGroup
+
+  event     Event      @relation(fields: [eventId], references: [id])
+
+  @@unique([eventId, group])
+}
+
+enum AgeGroup {
+  youth
+  family
+  senior
+}
+
+enum ParticipationStatus {
+  joined
+  cancelled
 }
