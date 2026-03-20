@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import prisma from "./prisma"
 import userRoutes from "./routes/users"
 import eventRoutes from "./routes/events"
+import participationRoutes from "./routes/participations"
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use(express.json())
 // ルーティング
 app.use("/users", userRoutes)
 app.use("/events", eventRoutes)
+app.use("/participations", participationRoutes)
 
 // ヘルスチェック
 app.get("/", (_req, res) => {
