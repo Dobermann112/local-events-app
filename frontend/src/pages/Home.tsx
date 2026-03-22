@@ -32,6 +32,26 @@ const Home = ({ currentUser }: Props) => {
     fetchData()
   }, [currentUser.id])
 
+  const handleJoin = async (eventId: string) => {
+    try {
+        const res = await client.post(`/events/${eventId}/join`, {
+        userId: currentUser.id,
+        })
+
+        // participationId取得
+        const participationId = res.data.id
+
+        // 即時UI更新
+        setJoinedEventMap((prev) => ({
+        ...prev,
+        [eventId]: participationId,
+        }))
+    } catch (error: any) {
+        console.error(error.response?.data)
+        alert(error.response?.data?.error || "参加できませんでした")
+    }
+  }
+
   const now = new Date()
 
   return (
@@ -77,7 +97,14 @@ const Home = ({ currentUser }: Props) => {
               定員: {event.capacity}
             </p>
 
-            <button disabled={disabled}>
+            <button
+              disabled={disabled}
+              onClick={() => {
+                  if (!isJoined && !isEnded) {
+                  handleJoin(event.id)
+                  }
+              }}
+            >
               {buttonLabel}
             </button>
           </div>
