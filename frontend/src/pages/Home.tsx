@@ -80,8 +80,7 @@ const Home = ({ currentUser }: Props) => {
         const isJoined = !!joinedEventMap[event.id]
         const isEnded = new Date(event.endAt) < now
 
-        const joinedCount = 0 // 次Stepで実装
-        const isFull = joinedCount >= event.capacity
+        const isFull = event.currentJoinedCount >= event.capacity
 
         let buttonLabel = "行ってみる"
         let disabled = false
@@ -89,11 +88,11 @@ const Home = ({ currentUser }: Props) => {
         if (isEnded) {
           buttonLabel = "終了"
           disabled = true
+        } else if (isJoined) {
+          buttonLabel = "キャンセル"
         } else if (isFull) {
           buttonLabel = "満員"
           disabled = true
-        } else if (isJoined) {
-          buttonLabel = "キャンセル"
         } else {
           buttonLabel = "行ってみる"
         }

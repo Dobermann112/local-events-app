@@ -48,26 +48,36 @@ router.post("/", async (req, res) => {
 })
 
 // イベント一覧（終了イベント除外）
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const now = new Date()
-
     const events = await prisma.event.findMany({
       where: {
         endAt: {
-          gt: now,
+          gt: new Date(),
         },
       },
       orderBy: {
         startAt: "asc",
       },
       include: {
-        area: true,
-        participations: true,
+        participations: {
+          where: {
+            status: "joined",
+          },
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
-    res.json(events)
+    const formatted = events.map((event) => ({
+      ...event,
+      currentJoinedCount: event.participations.length,
+      participations: undefined,
+    }))
+
+    res.json(formatted)
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: "Internal Server Error" })
