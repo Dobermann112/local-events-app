@@ -8,54 +8,81 @@ type Props = {
 }
 
 const Home = ({ currentUser }: Props) => {
-  // 🟢 イベント一覧
   const [events, setEvents] = useState<Event[]>([])
-
-  // 🟢 参加状態（eventId → participationId）
   const [joinedEventMap, setJoinedEventMap] = useState<Record<string, string>>({})
 
-  // 🟢 初期データ取得
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // ① イベント取得
-        const eventRes = await client.get("/events")
-        setEvents(eventRes.data)
+      const eventRes = await client.get("/events")
+      setEvents(eventRes.data)
 
-        // ② 参加情報取得
-        const participationRes = await client.get(
-          `/users/${currentUser.id}/participations`
-        )
+      const participationRes = await client.get(
+        `/users/${currentUser.id}/participations`
+      )
 
-        // ③ Map生成
-        const map: Record<string, string> = {}
+      const map: Record<string, string> = {}
 
-        participationRes.data.forEach((p: any) => {
-          map[p.eventId] = p.id
-        })
+      participationRes.data.forEach((p: any) => {
+        map[p.eventId] = p.id
+      })
 
-        setJoinedEventMap(map)
-
-        // 🧪 デバッグ確認
-        console.log("joinedEventMap:", map)
-
-      } catch (error) {
-        console.error("Failed to fetch data", error)
-      }
+      setJoinedEventMap(map)
     }
 
     fetchData()
   }, [currentUser.id])
 
+  const now = new Date()
+
   return (
     <div>
-      <h1>イベント一覧</h1>
+      <h2>イベント一覧</h2>
 
-      {/* 仮表示 */}
-      <pre>{JSON.stringify(events, null, 2)}</pre>
+      {events.map((event) => {
+        const isJoined = !!joinedEventMap[event.id]
+        const isEnded = new Date(event.endAt) < now
 
-      <h2>参加状態</h2>
-      <pre>{JSON.stringify(joinedEventMap, null, 2)}</pre>
+        const joinedCount = 0 // 次Stepで実装
+        const isFull = joinedCount >= event.capacity
+
+        let buttonLabel = "行ってみる"
+        let disabled = false
+
+        if (isEnded) {
+          buttonLabel = "終了"
+          disabled = true
+        } else if (isFull) {
+          buttonLabel = "満員"
+          disabled = true
+        } else if (isJoined) {
+          buttonLabel = "参加済み"
+        }
+
+        return (
+          <div
+            key={event.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "16px",
+              marginBottom: "12px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>{event.title}</h3>
+            <p>場所: {event.location}</p>
+            <p>
+              開催日時: {new Date(event.startAt).toLocaleString()}
+            </p>
+            <p>
+              定員: {event.capacity}
+            </p>
+
+            <button disabled={disabled}>
+              {buttonLabel}
+            </button>
+          </div>
+        )
+      })}
     </div>
   )
 }
