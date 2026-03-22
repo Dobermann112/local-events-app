@@ -6,4 +6,5 @@ export type Event = {
   location: string
   capacity: number
   allowSameDay: boolean
+  currentJoinedCount: number
 }
