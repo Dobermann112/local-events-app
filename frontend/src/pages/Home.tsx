@@ -1,14 +1,11 @@
-import { useEffect } from "react"
-import client from "../api/client"
+import type { User } from "../types/User"
 
-function Home() {
-  useEffect(() => {
-    client.get("/events")
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err))
-  }, [])
+type Props = {
+  currentUser: User
+}
 
-  return <div>Home Page</div>
+const Home = ({ currentUser }: Props) => {
+  return <div>Home: {currentUser.name}</div>
 }
 
 export default Home
