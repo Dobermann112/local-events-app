@@ -35,9 +35,8 @@ router.get("/:id/participations", async (req, res) => {
         userId,
         status: "joined",
       },
-      select: {
-        id: true,
-        eventId: true,
+      include: {
+        event: true,
       },
     })
 
