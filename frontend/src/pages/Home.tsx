@@ -52,6 +52,24 @@ const Home = ({ currentUser }: Props) => {
     }
   }
 
+  const handleCancel = async (eventId: string) => {
+    try {
+        const participationId = joinedEventMap[eventId]
+
+        await client.patch(`/participations/${participationId}/cancel`)
+
+        // 即時UI更新（削除）
+        setJoinedEventMap((prev) => {
+        const updated = { ...prev }
+        delete updated[eventId]
+        return updated
+        })
+    } catch (error) {
+        console.error(error)
+        alert("キャンセルできませんでした")
+    }
+  }
+
   const now = new Date()
 
   return (
@@ -75,7 +93,9 @@ const Home = ({ currentUser }: Props) => {
           buttonLabel = "満員"
           disabled = true
         } else if (isJoined) {
-          buttonLabel = "参加済み"
+          buttonLabel = "キャンセル"
+        } else {
+          buttonLabel = "行ってみる"
         }
 
         return (
@@ -100,9 +120,11 @@ const Home = ({ currentUser }: Props) => {
             <button
               disabled={disabled}
               onClick={() => {
-                  if (!isJoined && !isEnded) {
+                if (isJoined) {
+                  handleCancel(event.id)
+                } else if (!isEnded) {
                   handleJoin(event.id)
-                  }
+                }
               }}
             >
               {buttonLabel}
