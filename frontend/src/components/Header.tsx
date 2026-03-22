@@ -4,7 +4,7 @@ function Header({ currentUser, setCurrentUser }: any) {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem("user")
+    localStorage.removeItem("token")
     setCurrentUser(null)
     navigate("/login")
   }

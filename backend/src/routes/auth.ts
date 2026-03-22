@@ -66,11 +66,19 @@ router.post("/login", async (req, res) => {
       {
         userId: user.id,
         name: user.name,
+        ageGroup: user.ageGroup,
       },
       process.env.JWT_SECRET as string
     )
 
-    res.json({ token })
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        ageGroup: user.ageGroup,
+      },
+    })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: "Internal Server Error" })

@@ -1,28 +1,41 @@
 import { Routes, Route, Navigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { jwtDecode } from "jwt-decode"
 import Login from "./pages/Login"
 import MainLayout from "./layouts/MainLayout"
 import type { User } from "./types/User"
 
-function App() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+type DecodedToken = {
+  userId: string
+  name: string
+  ageGroup: string
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem("user")
-    if (saved) {
-      setCurrentUser(JSON.parse(saved))
+const token = localStorage.getItem("token")
+
+let initialUser: User | null = null
+
+if (token) {
+  try {
+    const decoded = jwtDecode<DecodedToken>(token)
+
+    initialUser = {
+      id: decoded.userId,
+      name: decoded.name,
+      ageGroup: decoded.ageGroup,
     }
-    setLoading(false)
-  }, [])
-
-  if (loading) {
-    return <div>Loading...</div>
+  } catch {
+    localStorage.removeItem("token")
   }
+}
+
+function App() {
+  const [currentUser, setCurrentUser] = useState<User | null>(initialUser)
 
   return (
     <Routes>
       <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
+
       <Route
         path="/*"
         element={
