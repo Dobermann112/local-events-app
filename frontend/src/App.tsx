@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom"
 import { useState } from "react"
 import { jwtDecode } from "jwt-decode"
+import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import MainLayout from "./layouts/MainLayout"
 import type { User } from "./types/User"
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/signup" element={<Signup setCurrentUser={setCurrentUser} />} />
       <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
 
       <Route
