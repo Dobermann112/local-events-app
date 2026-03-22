@@ -1,10 +1,11 @@
 import { Router } from "express"
+import { authMiddleware, AuthRequest } from "../middleware/authMiddleware"
 import prisma from "../prisma"
 
 const router = Router()
 
 // イベント作成
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const {
       title,
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
       areaId,
     } = req.body
 
-    if (!title || !startAt || !endAt || !location || !capacity || !organizerId || !areaId) {
+    if (!title || !startAt || !endAt || !location || !capacity || !areaId) {
       return res.status(400).json({ error: "Required fields missing" })
     }
 
@@ -35,7 +36,7 @@ router.post("/", async (req, res) => {
         location,
         capacity,
         allowSameDay,
-        organizerId,
+        organizerId: req.user!.userId,
         areaId,
       },
     })
