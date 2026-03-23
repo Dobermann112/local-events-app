@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import client from "../api/client"
+import EventCard from "../components/EventCard"
 import type { User } from "../types/User"
 import type { Event } from "../types/Event"
 
@@ -82,53 +83,16 @@ const Home = ({ currentUser }: Props) => {
 
         const isFull = event.currentJoinedCount >= event.capacity
 
-        let buttonLabel = "行ってみる"
-        let disabled = false
-
-        if (isEnded) {
-          buttonLabel = "終了"
-          disabled = true
-        } else if (isJoined) {
-          buttonLabel = "キャンセル"
-        } else if (isFull) {
-          buttonLabel = "満員"
-          disabled = true
-        } else {
-          buttonLabel = "行ってみる"
-        }
-
         return (
-          <div
+          <EventCard
             key={event.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "16px",
-              marginBottom: "12px",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>{event.title}</h3>
-            <p>場所: {event.location}</p>
-            <p>
-              開催日時: {new Date(event.startAt).toLocaleString()}
-            </p>
-            <p>
-              定員: {event.capacity}
-            </p>
-
-            <button
-              disabled={disabled}
-              onClick={() => {
-                if (isJoined) {
-                  handleCancel(event.id)
-                } else if (!isEnded) {
-                  handleJoin(event.id)
-                }
-              }}
-            >
-              {buttonLabel}
-            </button>
-          </div>
+            event={event}
+            isJoined={isJoined}
+            isEnded={isEnded}
+            isFull={isFull}
+            onJoin={() => handleJoin(event.id)}
+            onCancel={() => handleCancel(event.id)}
+          />
         )
       })}
     </div>
