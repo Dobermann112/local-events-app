@@ -1,4 +1,5 @@
 import type { Event } from "../types/Event"
+import Button from "./ui/Button"
 
 type Props = {
   event: Event
@@ -68,23 +69,20 @@ const EventCard = ({
       )}
 
       {!hideAction && (
-        <button
-          disabled={disabled}
-          onClick={isJoined ? onCancel : onJoin}
-          style={{
-            marginTop: "12px",
-            width: "100%",
-            padding: "10px",
-            borderRadius: "12px",
-            border: "none",
-            backgroundColor: buttonColor,
-            color: "#fff",
-            fontWeight: "bold",
-            cursor: disabled ? "not-allowed" : "pointer",
-          }}
+        <Button
+            fullWidth
+            variant={
+                isEnded
+                ? "neutral"
+                : isFull || isJoined
+                ? "danger"
+                : "primary"
+            }
+            disabled={disabled}
+            onClick={isJoined ? onCancel : onJoin}
         >
-          {buttonLabel}
-        </button>
+            {buttonLabel}
+        </Button>
       )}
     </div>
   )

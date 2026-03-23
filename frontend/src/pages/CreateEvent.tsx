@@ -2,6 +2,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import client from "../api/client"
 import type { User } from "../types/User"
+import Input from "../components/ui/Input"
+import Button from "../components/ui/Button"
 
 type Props = {
   currentUser: User
@@ -43,37 +45,13 @@ const CreateEvent = ({ currentUser }: Props) => {
     <div>
       <h2>イベント作成</h2>
 
-      <input
-        placeholder="タイトル"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="タイトル" />
+      <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="場所" />
+      <Input value={String(capacity)} onChange={(e) => setCapacity(Number(e.target.value))} type="number" />
+      <Input value={startAt} onChange={(e) => setStartAt(e.target.value)} type="datetime-local" />
+      <Input value={endAt} onChange={(e) => setEndAt(e.target.value)} type="datetime-local" />
 
-      <input
-        placeholder="場所"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-      />
-
-      <input
-        type="number"
-        value={capacity}
-        onChange={(e) => setCapacity(Number(e.target.value))}
-      />
-
-      <input
-        type="datetime-local"
-        value={startAt}
-        onChange={(e) => setStartAt(e.target.value)}
-      />
-
-      <input
-        type="datetime-local"
-        value={endAt}
-        onChange={(e) => setEndAt(e.target.value)}
-      />
-
-      <button onClick={handleSubmit}>作成</button>
+      <Button fullWidth onClick={handleSubmit}>作成</Button>
     </div>
   )
 }

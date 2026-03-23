@@ -2,6 +2,10 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import client from "../api/client"
 import type { User } from "../types/User"
+import PageContainer from "../components/ui/PageContainer"
+import Input from "../components/ui/Input"
+import Select from "../components/ui/Select"
+import Button from "../components/ui/Button"
 
 type Props = {
   setCurrentUser: (user: User | null) => void
@@ -39,33 +43,20 @@ const Signup = ({ setCurrentUser }: Props) => {
   }
 
   return (
-    <div>
+    <PageContainer>
       <h2>サインアップ</h2>
 
-      <input
-        placeholder="名前"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <Input placeholder="名前" value={name} onChange={(e) => setName(e.target.value)} />
+      <Input type="password" placeholder="パスワード" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-      <input
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <select
-        value={ageGroup}
-        onChange={(e) => setAgeGroup(e.target.value)}
-      >
+      <Select value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)} >
         <option value="youth">若者</option>
         <option value="family">家族</option>
         <option value="senior">高齢者</option>
-      </select>
+      </Select>
 
-      <button onClick={handleSignup}>登録</button>
-    </div>
+      <Button fullWidth onClick={handleSignup}>登録</Button>
+    </PageContainer>
   )
 }
 

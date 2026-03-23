@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom"
 import Header from "../components/Header"
 import FooterNav from "../components/FooterNav"
 import type { User } from "../types/User"
+import PageContainer from "../components/ui/PageContainer"
 
 type Props = {
   currentUser: User
@@ -14,9 +15,9 @@ function MainLayout({ currentUser, setCurrentUser }: Props) {
     localStorage.removeItem("token")
     setCurrentUser(null)
   }
-  
+
   return (
-    <div style={{ backgroundColor: "#F5F7FA", minHeight: "100vh" }}>
+    <PageContainer>
       {/* PC Header */}
       <div className="desktop-only">
         <Header
@@ -39,7 +40,7 @@ function MainLayout({ currentUser, setCurrentUser }: Props) {
       <div className="mobile-only">
         <FooterNav />
       </div>
-    </div>
+    </PageContainer>
   )
 }
 

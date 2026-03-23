@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import client from "../api/client"
+import PageContainer from "../components/ui/PageContainer"
+import Input from "../components/ui/Input"
+import Button from "../components/ui/Button"
 
 function Login({ setCurrentUser }: any) {
   const [name, setName] = useState("")
@@ -30,22 +33,13 @@ function Login({ setCurrentUser }: any) {
   }
 
   return (
-    <div>
+    <PageContainer>
       <h2>ログイン</h2>
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="名前"
-      />
+      <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="名前" />
+      <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="パスワード" />
 
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="パスワード"
-      />
-      <button onClick={handleLogin}>ログイン</button>
-    </div>
+      <Button fullWidth onClick={handleLogin}>ログイン</Button>
+    </PageContainer>
   )
 }
 
