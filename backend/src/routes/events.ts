@@ -194,6 +194,42 @@ router.get("/:id", async (req, res) => {
   }
 })
 
+router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
+    try {
+      const id = req.params.id as string
+      const { title, location, capacity, startAt, endAt, description } =
+        req.body
+
+      const event = await prisma.event.findUnique({ where: { id } })
+
+      if (!event) {
+        return res.status(404).json({ error: "Event not found" })
+      }
+
+      if (event.organizerId !== req.user!.userId) {
+        return res.status(403).json({ error: "Forbidden" })
+      }
+
+      const updated = await prisma.event.update({
+        where: { id },
+        data: {
+          title,
+          location,
+          capacity,
+          startAt: new Date(startAt),
+          endAt: new Date(endAt),
+          description,
+        },
+      })
+
+      res.json(updated)
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: "Internal Server Error" })
+    }
+  }
+)
+
 router.delete("/:id", authMiddleware, async (req: AuthRequest, res) => {
   try {
     console.log("🔥 DELETE START")

@@ -62,6 +62,7 @@ const EventDetail = ({ currentUser }: Props) => {
         <EventCard
           event={event}
           disableNavigation
+          showDescription
 
           isOwner={isOwner}
           isJoined={isJoined}

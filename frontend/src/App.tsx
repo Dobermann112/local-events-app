@@ -7,6 +7,7 @@ import MainLayout from "./layouts/MainLayout"
 import Home from "./pages/Home"
 import EventDetail from "./pages/EventDetail"
 import CreateEvent from "./pages/CreateEvent"
+import EditEvent from "./pages/EditEvent"
 import MyPage from "./pages/MyPage"
 import type { User } from "./types/User"
 
@@ -58,6 +59,7 @@ function App() {
         <Route path="/" element={<Home currentUser={currentUser!} />} />
         <Route path="/events/:id" element={<EventDetail currentUser={currentUser!} />} />
         <Route path="/create" element={<CreateEvent currentUser={currentUser!} />} />
+        <Route path="/events/:id/edit" element={<EditEvent currentUser={currentUser!} />} />
         <Route path="/mypage" element={<MyPage currentUser={currentUser!} />} />
       </Route>
     </Routes>

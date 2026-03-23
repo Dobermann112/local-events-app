@@ -11,6 +11,7 @@ type Props = {
   onCancel?: () => void
   hideAction?: boolean
   disableNavigation?: boolean
+  showDescription?: boolean
 
   isOwner?: boolean
   onEdit?: () => void
@@ -26,6 +27,7 @@ const EventCard = ({
   onCancel,
   hideAction,
   disableNavigation,
+  showDescription,
   isOwner,
   onEdit,
   onDelete,
@@ -78,6 +80,19 @@ const EventCard = ({
       {event.capacity && (
         <p style={{ margin: "4px 0", color: "#666" }}>
           👥 {event.currentJoinedCount} / {event.capacity}
+        </p>
+      )}
+
+      {showDescription && event.description?.trim() && (
+        <p
+          style={{
+            margin: "8px 0",
+            color: "#555",
+            whiteSpace: "pre-wrap",
+            lineHeight: "1.5",
+          }}
+        >
+            📝 {event.description}
         </p>
       )}
 
