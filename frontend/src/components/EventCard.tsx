@@ -35,20 +35,16 @@ const EventCard = ({
   const navigate = useNavigate()
 
   let buttonLabel = ""
-  let buttonColor = "#4CAF50"
   let disabled = false
 
   if (isEnded) {
     buttonLabel = "終了"
-    buttonColor = "#BDBDBD"
     disabled = true
   } else if (isFull) {
     buttonLabel = "満員"
-    buttonColor = "#FF8A65"
     disabled = true
   } else if (isJoined) {
     buttonLabel = "キャンセル"
-    buttonColor = "#FF8A65"
   } else {
     buttonLabel = "行ってみる"
   }
@@ -108,7 +104,8 @@ const EventCard = ({
                     : "primary"
                 }
                 disabled={disabled}
-                onClick={() => {
+                onClick={(e) => {
+                e.stopPropagation()
                 isJoined ? onCancel?.() : onJoin?.()
                 }}
             >
