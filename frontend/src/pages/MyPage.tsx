@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import client from "../api/client"
+import EventCard from "../components/EventCard"
 import type { User } from "../types/User"
 import type { Event } from "../types/Event"
 
@@ -41,25 +42,12 @@ const MyPage = ({ currentUser }: Props) => {
       {participations.length === 0 && <p>参加中のイベントはありません</p>}
 
       {participations.map((p) => (
-        <div
-          key={p.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "16px",
-            marginBottom: "12px",
-            borderRadius: "8px",
-          }}
-        >
-          <h3>{p.event.title}</h3>
-          <p>場所: {p.event.location}</p>
-          <p>
-            開催日時: {new Date(p.event.startAt).toLocaleString()}
-          </p>
-
-          <button onClick={() => handleCancel(p.id)}>
-            キャンセル
-          </button>
-        </div>
+        <EventCard
+            key={p.id}
+            event={p.event}
+            isJoined={true}
+            onCancel={() => handleCancel(p.id)}
+        />
       ))}
     </div>
   )
