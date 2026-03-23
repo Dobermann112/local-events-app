@@ -1,4 +1,5 @@
 import type { Event } from "../types/Event"
+import { useNavigate } from "react-router-dom"
 import Button from "./ui/Button"
 
 type Props = {
@@ -9,6 +10,11 @@ type Props = {
   onJoin?: () => void
   onCancel?: () => void
   hideAction?: boolean
+  disableNavigation?: boolean
+
+  isOwner?: boolean
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 const EventCard = ({
@@ -19,7 +25,13 @@ const EventCard = ({
   onJoin,
   onCancel,
   hideAction,
+  disableNavigation,
+  isOwner,
+  onEdit,
+  onDelete,
 }: Props) => {
+  const navigate = useNavigate()
+
   let buttonLabel = ""
   let buttonColor = "#4CAF50"
   let disabled = false
@@ -41,6 +53,7 @@ const EventCard = ({
 
   return (
     <div
+      onClick={() => {if (!disableNavigation) {navigate(`/events/${event.id}`)}}}
       style={{
         backgroundColor: "#FFFFFF",
         borderRadius: "16px",
@@ -69,7 +82,10 @@ const EventCard = ({
       )}
 
       {!hideAction && (
-        <Button
+        <div style={{ marginTop: "12px", display: "flex", gap: "8px" }}>
+            
+            {/* 参加ボタン */}
+            <Button
             fullWidth
             variant={
                 isEnded
@@ -79,11 +95,41 @@ const EventCard = ({
                 : "primary"
             }
             disabled={disabled}
-            onClick={isJoined ? onCancel : onJoin}
-        >
+            onClick={(e) => {
+                e.stopPropagation()
+                isJoined ? onCancel?.() : onJoin?.()
+            }}
+            >
             {buttonLabel}
-        </Button>
-      )}
+            </Button>
+
+            {/* 編集（作成者のみ） */}
+            {isOwner && (
+            <Button
+                variant="primary"
+                onClick={(e) => {
+                e.stopPropagation()
+                onEdit?.()
+                }}
+            >
+                編集
+            </Button>
+            )}
+
+            {/* 削除（作成者のみ） */}
+            {isOwner && (
+            <Button
+                variant="danger"
+                onClick={(e) => {
+                e.stopPropagation()
+                onDelete?.()
+                }}
+            >
+                削除
+            </Button>
+            )}
+        </div>
+        )}
     </div>
   )
 }
