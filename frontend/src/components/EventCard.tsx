@@ -82,51 +82,41 @@ const EventCard = ({
       )}
 
       {!hideAction && (
-        <div style={{ marginTop: "12px", display: "flex", gap: "8px" }}>
-            
-            {/* 参加ボタン */}
+        <div style={{ marginTop: "12px" }}>
             <Button
-            fullWidth
-            variant={
+                fullWidth
+                variant={
                 isEnded
-                ? "neutral"
-                : isFull || isJoined
-                ? "danger"
-                : "primary"
-            }
-            disabled={disabled}
-            onClick={(e) => {
-                e.stopPropagation()
+                    ? "neutral"
+                    : isFull || isJoined
+                    ? "danger"
+                    : "primary"
+                }
+                disabled={disabled}
+                onClick={() => {
                 isJoined ? onCancel?.() : onJoin?.()
-            }}
-            >
-            {buttonLabel}
-            </Button>
-
-            {/* 編集（作成者のみ） */}
-            {isOwner && (
-            <Button
-                variant="primary"
-                onClick={(e) => {
-                e.stopPropagation()
-                onEdit?.()
                 }}
             >
-                編集
+                {buttonLabel}
             </Button>
-            )}
 
-            {/* 削除（作成者のみ） */}
+            {/* 作成者ボタン */}
             {isOwner && (
-            <Button
-                variant="danger"
-                onClick={(e) => {
-                e.stopPropagation()
-                onDelete?.()
-                }}
-            >
-                削除
-            </Button>
+                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                <Button
+                    variant="primary"
+                    onClick={onEdit}
+                >
+                    編集
+                </Button>
+
+                <Button
+                    variant="danger"
+                    onClick={onDelete}
+                >
+                    削除
+                </Button>
+                </div>
             )}
         </div>
         )}
