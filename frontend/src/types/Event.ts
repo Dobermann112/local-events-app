@@ -5,6 +5,7 @@ export type Event = {
   endAt: string
   location: string
   capacity: number
+  description?: string
   allowSameDay: boolean
   currentJoinedCount: number
 }

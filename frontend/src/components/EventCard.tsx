@@ -1,4 +1,5 @@
 import type { Event } from "../types/Event"
+import { useNavigate } from "react-router-dom"
 import Button from "./ui/Button"
 
 type Props = {
@@ -9,6 +10,12 @@ type Props = {
   onJoin?: () => void
   onCancel?: () => void
   hideAction?: boolean
+  disableNavigation?: boolean
+  showDescription?: boolean
+
+  isOwner?: boolean
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 const EventCard = ({
@@ -19,7 +26,14 @@ const EventCard = ({
   onJoin,
   onCancel,
   hideAction,
+  disableNavigation,
+  showDescription,
+  isOwner,
+  onEdit,
+  onDelete,
 }: Props) => {
+  const navigate = useNavigate()
+
   let buttonLabel = ""
   let buttonColor = "#4CAF50"
   let disabled = false
@@ -41,6 +55,7 @@ const EventCard = ({
 
   return (
     <div
+      onClick={() => {if (!disableNavigation) {navigate(`/events/${event.id}`)}}}
       style={{
         backgroundColor: "#FFFFFF",
         borderRadius: "16px",
@@ -68,22 +83,58 @@ const EventCard = ({
         </p>
       )}
 
-      {!hideAction && (
-        <Button
-            fullWidth
-            variant={
-                isEnded
-                ? "neutral"
-                : isFull || isJoined
-                ? "danger"
-                : "primary"
-            }
-            disabled={disabled}
-            onClick={isJoined ? onCancel : onJoin}
+      {showDescription && event.description?.trim() && (
+        <p
+          style={{
+            margin: "8px 0",
+            color: "#555",
+            whiteSpace: "pre-wrap",
+            lineHeight: "1.5",
+          }}
         >
-            {buttonLabel}
-        </Button>
+            📝 {event.description}
+        </p>
       )}
+
+      {!hideAction && (
+        <div style={{ marginTop: "12px" }}>
+            <Button
+                fullWidth
+                variant={
+                isEnded
+                    ? "neutral"
+                    : isFull || isJoined
+                    ? "danger"
+                    : "primary"
+                }
+                disabled={disabled}
+                onClick={() => {
+                isJoined ? onCancel?.() : onJoin?.()
+                }}
+            >
+                {buttonLabel}
+            </Button>
+
+            {/* 作成者ボタン */}
+            {isOwner && (
+                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                <Button
+                    variant="primary"
+                    onClick={onEdit}
+                >
+                    編集
+                </Button>
+
+                <Button
+                    variant="danger"
+                    onClick={onDelete}
+                >
+                    削除
+                </Button>
+                </div>
+            )}
+        </div>
+        )}
     </div>
   )
 }

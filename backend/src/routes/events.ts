@@ -161,4 +161,106 @@ router.post("/:id/join", async (req, res) => {
   }
 })
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const event = await prisma.event.findUnique({
+      where: { id },
+      include: {
+        participations: {
+          where: { status: "joined" },
+          select: { 
+            id: true,
+            userId: true,
+          },
+        },
+        organizer: {
+          select: { id: true, name: true },
+        },
+      },
+    })
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" })
+    }
+
+    res.json({
+      ...event,
+      currentJoinedCount: event.participations.length,
+    })
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" })
+  }
+})
+
+router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
+    try {
+      const id = req.params.id as string
+      const { title, location, capacity, startAt, endAt, description } =
+        req.body
+
+      const event = await prisma.event.findUnique({ where: { id } })
+
+      if (!event) {
+        return res.status(404).json({ error: "Event not found" })
+      }
+
+      if (event.organizerId !== req.user!.userId) {
+        return res.status(403).json({ error: "Forbidden" })
+      }
+
+      const updated = await prisma.event.update({
+        where: { id },
+        data: {
+          title,
+          location,
+          capacity,
+          startAt: new Date(startAt),
+          endAt: new Date(endAt),
+          description,
+        },
+      })
+
+      res.json(updated)
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: "Internal Server Error" })
+    }
+  }
+)
+
+router.delete("/:id", authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    console.log("🔥 DELETE START")
+
+    const id = req.params.id as string
+
+    const event = await prisma.event.findUnique({
+      where: { id },
+    })
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" })
+    }
+
+    if (event.organizerId !== req.user!.userId) {
+      return res.status(403).json({ error: "Forbidden" })
+    }
+
+    await prisma.participation.deleteMany({
+      where: { eventId: id },
+    })
+
+    await prisma.event.delete({
+      where: { id },
+    })
+
+    res.json({ message: "Event deleted" })
+  } catch (error) {
+    console.error("💥 ERROR:", error) // ← ここ重要
+    res.status(500).json({ error: "Internal Server Error" })
+  }
+})
+
 export default router
