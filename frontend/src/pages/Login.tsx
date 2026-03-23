@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import client from "../api/client"
 import PageContainer from "../components/ui/PageContainer"
 import Input from "../components/ui/Input"
@@ -39,6 +40,13 @@ function Login({ setCurrentUser }: any) {
       <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="パスワード" />
 
       <Button fullWidth onClick={handleLogin}>ログイン</Button>
+
+      <p style={{ marginTop: "16px", fontSize: "14px" }}>
+        アカウントをお持ちでない方は{" "}
+        <Link to="/signup" style={{ color: "#4CAF50", fontWeight: "bold" }} >
+          こちら
+        </Link>
+      </p>
     </PageContainer>
   )
 }

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import client from "../api/client"
 import type { User } from "../types/User"
 import PageContainer from "../components/ui/PageContainer"
@@ -56,6 +57,13 @@ const Signup = ({ setCurrentUser }: Props) => {
       </Select>
 
       <Button fullWidth onClick={handleSignup}>登録</Button>
+
+      <p style={{ marginTop: "16px", fontSize: "14px" }}>
+        既にアカウントをお持ちの方は{" "}
+        <Link to="/login" style={{ color: "#4CAF50", fontWeight: "bold" }} >
+          ログイン
+        </Link>
+      </p>
     </PageContainer>
   )
 }

@@ -18,13 +18,10 @@ function MainLayout({ currentUser, setCurrentUser }: Props) {
 
   return (
     <PageContainer>
-      {/* PC Header */}
-      <div className="desktop-only">
         <Header
           currentUser={currentUser}
           onLogout={handleLogout}
         />
-      </div>
 
       <main
         style={{
