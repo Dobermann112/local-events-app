@@ -1,22 +1,43 @@
-import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
-function Header({ currentUser, setCurrentUser }: any) {
-  const navigate = useNavigate()
+type Props = {
+  currentUser: { id: string; name: string } | null
+  onLogout: () => void
+}
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    setCurrentUser(null)
-    navigate("/login")
-  }
-
+const Header = ({ currentUser, onLogout }: Props) => {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <h3>Local Events</h3>
+    <header
+      style={{
+        backgroundColor: "#FFFFFF",
+        padding: "16px 24px",
+        borderBottom: "1px solid #E0E0E0",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <h2 style={{ color: "#4CAF50", margin: 0 }}>ロコイベ</h2>
+
+      <nav style={{ display: "flex", gap: "24px" }}>
+        <Link to="/">Home</Link>
+        <Link to="/create">作成</Link>
+        <Link to="/mypage">マイページ</Link>
+      </nav>
+
       <div>
-        <span>{currentUser.name}</span>
-        <button onClick={handleLogout}>ログアウト</button>
+        {currentUser ? (
+          <>
+            <span style={{ marginRight: "12px" }}>
+              {currentUser.name}
+            </span>
+            <button onClick={onLogout}>ログアウト</button>
+          </>
+        ) : (
+          <Link to="/login">ログイン</Link>
+        )}
       </div>
-    </div>
+    </header>
   )
 }
 

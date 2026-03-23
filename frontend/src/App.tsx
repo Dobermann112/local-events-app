@@ -4,6 +4,10 @@ import { jwtDecode } from "jwt-decode"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import MainLayout from "./layouts/MainLayout"
+import Home from "./pages/Home"
+import EventDetail from "./pages/EventDetail"
+import CreateEvent from "./pages/CreateEvent"
+import MyPage from "./pages/MyPage"
 import type { User } from "./types/User"
 
 type DecodedToken = {
@@ -19,7 +23,6 @@ let initialUser: User | null = null
 if (token) {
   try {
     const decoded = jwtDecode<DecodedToken>(token)
-
     initialUser = {
       id: decoded.userId,
       name: decoded.name,
@@ -35,11 +38,12 @@ function App() {
 
   return (
     <Routes>
+      {/* 公開ルート */}
       <Route path="/signup" element={<Signup setCurrentUser={setCurrentUser} />} />
       <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
 
+      {/* 認証必須ルート */}
       <Route
-        path="/*"
         element={
           currentUser ? (
             <MainLayout
@@ -50,7 +54,12 @@ function App() {
             <Navigate to="/login" />
           )
         }
-      />
+      >
+        <Route path="/" element={<Home currentUser={currentUser!} />} />
+        <Route path="/events/:id" element={<EventDetail currentUser={currentUser!} />} />
+        <Route path="/create" element={<CreateEvent currentUser={currentUser!} />} />
+        <Route path="/mypage" element={<MyPage currentUser={currentUser!} />} />
+      </Route>
     </Routes>
   )
 }
