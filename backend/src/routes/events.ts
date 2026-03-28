@@ -15,8 +15,8 @@ router.post("/", authMiddleware, async (req: AuthRequest, res) => {
       location,
       capacity,
       allowSameDay,
-      organizerId,
       areaId,
+      targetGroups,
     } = req.body
 
     if (!title || !startAt || !endAt || !location || !capacity || !areaId) {
@@ -38,6 +38,13 @@ router.post("/", authMiddleware, async (req: AuthRequest, res) => {
         allowSameDay,
         organizerId: req.user!.userId,
         areaId,
+        targetGroups: targetGroups?.length
+          ? {
+              create: targetGroups.map((group: string) => ({
+                group,
+              })),
+            }
+          : undefined,
       },
     })
 
@@ -178,6 +185,7 @@ router.get("/:id", async (req, res) => {
         organizer: {
           select: { id: true, name: true },
         },
+        targetGroups: true,
       },
     })
 
@@ -197,7 +205,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
     try {
       const id = req.params.id as string
-      const { title, location, capacity, startAt, endAt, description } =
+      const { title, location, capacity, startAt, endAt, description, targetGroups } =
         req.body
 
       const event = await prisma.event.findUnique({ where: { id } })
@@ -221,6 +229,19 @@ router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
           description,
         },
       })
+
+      await prisma.eventTargetGroup.deleteMany({
+        where: { eventId: id },
+      })
+
+      if (targetGroups && targetGroups.length > 0) {
+        await prisma.eventTargetGroup.createMany({
+          data: targetGroups.map((group: string) => ({
+            eventId: id,
+            group,
+          })),
+        })
+      }
 
       res.json(updated)
     } catch (error) {

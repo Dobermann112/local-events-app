@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import client from "../api/client"
 import EventCard from "../components/EventCard"
 import type { User } from "../types/User"
+import type { Event } from "../types/Event"
 
 type Props = {
   currentUser: User
@@ -12,7 +13,7 @@ const EventDetail = ({ currentUser }: Props) => {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const [event, setEvent] = useState<any>(null)
+  const [event, setEvent] = useState<Event | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const EventDetail = ({ currentUser }: Props) => {
 
           onDelete={handleDelete}
         />
+
     </div>
   )
 }

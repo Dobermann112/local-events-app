@@ -18,6 +18,12 @@ type Props = {
   onDelete?: () => void
 }
 
+const AGE_LABELS: Record<string, string> = {
+  youth: "若者",
+  family: "家族",
+  senior: "高齢者",
+}
+
 const EventCard = ({
   event,
   isJoined,
@@ -76,6 +82,15 @@ const EventCard = ({
       {event.capacity && (
         <p style={{ margin: "4px 0", color: "#666" }}>
           👥 {event.currentJoinedCount} / {event.capacity}
+        </p>
+      )}
+
+      {(event.targetGroups?.length ?? 0) > 0 && (
+        <p>
+          👥 対象:{" "}
+          {(event.targetGroups ?? [])
+            .map((g: { group: string }) => AGE_LABELS[g.group] ?? g.group)
+            .join(" / ")}
         </p>
       )}
 
