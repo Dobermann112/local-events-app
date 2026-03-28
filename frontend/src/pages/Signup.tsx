@@ -6,7 +6,6 @@ import type { User } from "../types/User"
 import SimpleHeader from "../components/SimpleHeader"
 import PageContainer from "../components/ui/PageContainer"
 import Input from "../components/ui/Input"
-import Select from "../components/ui/Select"
 import Button from "../components/ui/Button"
 
 type Props = {
@@ -18,14 +17,12 @@ const Signup = ({ setCurrentUser }: Props) => {
 
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
-  const [ageGroup, setAgeGroup] = useState("youth")
 
   const handleSignup = async () => {
     try {
       await client.post("/auth/signup", {
         name,
         password,
-        ageGroup,
       })
 
       // 自動ログイン
@@ -52,12 +49,6 @@ const Signup = ({ setCurrentUser }: Props) => {
 
         <Input placeholder="名前" value={name} onChange={(e) => setName(e.target.value)} />
         <Input type="password" placeholder="パスワード" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-        <Select value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)} >
-          <option value="youth">若者</option>
-          <option value="family">家族</option>
-          <option value="senior">高齢者</option>
-        </Select>
 
         <Button fullWidth onClick={handleSignup}>登録</Button>
 

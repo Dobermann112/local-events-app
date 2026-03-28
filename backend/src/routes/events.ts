@@ -15,8 +15,8 @@ router.post("/", authMiddleware, async (req: AuthRequest, res) => {
       location,
       capacity,
       allowSameDay,
-      organizerId,
       areaId,
+      targetGroups,
     } = req.body
 
     if (!title || !startAt || !endAt || !location || !capacity || !areaId) {
@@ -38,6 +38,13 @@ router.post("/", authMiddleware, async (req: AuthRequest, res) => {
         allowSameDay,
         organizerId: req.user!.userId,
         areaId,
+        targetGroups: targetGroups?.length
+          ? {
+              create: targetGroups.map((group: string) => ({
+                group,
+              })),
+            }
+          : undefined,
       },
     })
 
@@ -178,6 +185,7 @@ router.get("/:id", async (req, res) => {
         organizer: {
           select: { id: true, name: true },
         },
+        targetGroups: true,
       },
     })
 

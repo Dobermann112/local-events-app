@@ -8,4 +8,5 @@ export type Event = {
   description?: string
   allowSameDay: boolean
   currentJoinedCount: number
+  targetGroups?: {group: string}[]
 }

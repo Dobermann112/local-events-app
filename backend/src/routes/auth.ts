@@ -8,9 +8,9 @@ const router = Router()
 // サインアップ
 router.post("/signup", async (req, res) => {
   try {
-    const { name, password, ageGroup } = req.body
+    const { name, password } = req.body
 
-    if (!name || !password || !ageGroup) {
+    if (!name || !password) {
       return res.status(400).json({ error: "Missing fields" })
     }
 
@@ -28,7 +28,6 @@ router.post("/signup", async (req, res) => {
       data: {
         name,
         password: hashedPassword,
-        ageGroup,
       },
     })
 
@@ -66,7 +65,6 @@ router.post("/login", async (req, res) => {
       {
         userId: user.id,
         name: user.name,
-        ageGroup: user.ageGroup,
       },
       process.env.JWT_SECRET as string
     )
@@ -76,7 +74,6 @@ router.post("/login", async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
-        ageGroup: user.ageGroup,
       },
     })
   } catch (error) {

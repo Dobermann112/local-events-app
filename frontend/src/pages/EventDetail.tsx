@@ -84,6 +84,7 @@ const EventDetail = ({ currentUser }: Props) => {
 
           onDelete={handleDelete}
         />
+        
     </div>
   )
 }
