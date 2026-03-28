@@ -8,5 +8,7 @@ export type Event = {
   description?: string
   allowSameDay: boolean
   currentJoinedCount: number
+  organizerId: string
+  participations: {id: string; userId: string}[]
   targetGroups?: {group: string}[]
 }

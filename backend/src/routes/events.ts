@@ -205,7 +205,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
     try {
       const id = req.params.id as string
-      const { title, location, capacity, startAt, endAt, description } =
+      const { title, location, capacity, startAt, endAt, description, targetGroups } =
         req.body
 
       const event = await prisma.event.findUnique({ where: { id } })
@@ -229,6 +229,19 @@ router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
           description,
         },
       })
+
+      await prisma.eventTargetGroup.deleteMany({
+        where: { eventId: id },
+      })
+
+      if (targetGroups && targetGroups.length > 0) {
+        await prisma.eventTargetGroup.createMany({
+          data: targetGroups.map((group: string) => ({
+            eventId: id,
+            group,
+          })),
+        })
+      }
 
       res.json(updated)
     } catch (error) {
